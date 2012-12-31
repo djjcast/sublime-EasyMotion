@@ -21,6 +21,9 @@ class JumpGroupIterator:
     def __iter__(self):
         return self
 
+    def jump_target_count(self):
+        return len(self.all_jump_targets)
+
     def has_next(self):
         return self.jump_target_index < len(self.all_jump_targets)
 
@@ -99,7 +102,11 @@ class SublimeJumpCommand(sublime_plugin.WindowCommand):
             self.jump_group_iterator.reset()
 
         self.current_jump_group = self.jump_group_iterator.next()
-        self.prompt_for_jump()
+
+        if self.jump_group_iterator.jump_target_count() == 1:
+            self.jump_to('a')
+        else:
+            self.prompt_for_jump()
 
     def prompt_for_jump(self):
         self.activate_current_jump_group()
